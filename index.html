@@ -39,7 +39,7 @@
       let stdout = mp_js_stdout
 
       function execute(e) {
-        out.textContent = ''
+        stdout.textContent = ''
         mp_js_init(64 * 1024)
         mp_js_do_str(src.value)
 
