@@ -15,26 +15,19 @@
   </head>
   <body>
     <div id='mp_js_stdout'></div>
-    <div id=src class=language-python></div>
+    <textarea id=src class=language-python></textarea>
     <script src="micropython/micropython.js"></script>
-    <script src="codejar/codejar.js"></script>
     <link href="prism/prism.css" rel="stylesheet" />
     <script src="prism/prism.js"></script>
     <script>
-      let jar = CodeJar(document.querySelector('#src'), Prism.highlightElement, {
-        tab:'    ',
-      })
-
       mp_js_stdout.addEventListener('print', function(e) {
         e.target.textContent += e.data
       }, false)
 
-      jar.onUpdate(e => {
+      document.querySelector('#src').addEventListener('input', e => {
         document.querySelector('#mp_js_stdout').textContent = ''
-
         mp_js_init(64 * 1024)
-
-        mp_js_do_str(jar.toString())
+        mp_js_do_str(e.target.value)
       })
     </script>
   </body>
