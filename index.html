@@ -20,6 +20,8 @@
     <link href="prism/prism.css" rel="stylesheet" />
     <script src="prism/prism.js"></script>
     <script>
+      expected = "[0, 1, 2, 3, 4]"
+    
       mp_js_stdout.addEventListener('print', function(e) {
         e.target.textContent += e.data
       }, false)
@@ -28,6 +30,15 @@
         document.querySelector('#mp_js_stdout').textContent = ''
         mp_js_init(64 * 1024)
         mp_js_do_str(e.target.value)
+
+        if (expected) {
+          if (expected == document.querySelector('#mp_js_stdout').textContent.trim()) {
+            document.querySelector('#mp_js_stdout').textContent = '✔ ️'+ document.querySelector('#mp_js_stdout').textContent
+          } else {
+            document.querySelector('#mp_js_stdout').textContent = '❌ ' + document.querySelector('#mp_js_stdout').textContent
+          }  
+        }
+        
       })
     </script>
   </body>
