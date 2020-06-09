@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+    <div id='mp_js_stdout'></div>
+    <textarea id=src></textarea>
+    <script src="micropython/micropython.js"></script>
+    <script>
+      mp_js_stdout.addEventListener('print', function(e) {
+        e.target.textContent += e.data
+      }, false)
+
+      document.querySelector('#src').addEventListener('input', e => {
+        document.querySelector('#mp_js_stdout').textContent = ''
+
+        mp_js_init(64 * 1024)
+
+        mp_js_do_str(e.target.value)
+      })
+    </script>
+  </body>
+</html>
