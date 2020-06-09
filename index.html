@@ -43,6 +43,12 @@
         mp_js_init(64 * 1024)
         mp_js_do_str(src.value)
 
+        out.textContent = out.textContent.replace('Traceback (most recent call last):', '')
+        out.textContent = out.textContent.replace(/.*?line (\d+)/, (_,a) => {
+          return 'Error on line ' + a + ':'
+        })
+        out.textContent = out.textContent.replace(', in <module>','')
+        
         if (expected) {
           if (expected == out.textContent.trim()) {
             out.textContent = '✔️' + ' ' + out.textContent
