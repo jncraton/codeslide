@@ -17,8 +17,6 @@
     <div id='mp_js_stdout'></div>
     <textarea id=src class=language-python></textarea>
     <script src="micropython/micropython.js"></script>
-    <link href="prism/prism.css" rel="stylesheet" />
-    <script src="prism/prism.js"></script>
     <script>
       expected = "[0, 1, 2, 3, 4]"
     
@@ -26,20 +24,34 @@
         e.target.textContent += e.data
       }, false)
 
-      document.querySelector('#src').addEventListener('input', e => {
-        document.querySelector('#mp_js_stdout').textContent = ''
+      function execute() {
+        let src = document.querySelector('textarea')
+        let out = document.querySelector('#mp_js_stdout')
+      
+        out.textContent = ''
         mp_js_init(64 * 1024)
-        mp_js_do_str(e.target.value)
+        mp_js_do_str(src.value)
 
         if (expected) {
-          if (expected == document.querySelector('#mp_js_stdout').textContent.trim()) {
-            document.querySelector('#mp_js_stdout').textContent = '✔ ️'+ document.querySelector('#mp_js_stdout').textContent
+          if (expected == out.textContent.trim()) {
+            out.textContent = '✔️' + ' ' + out.textContent
           } else {
-            document.querySelector('#mp_js_stdout').textContent = '❌ ' + document.querySelector('#mp_js_stdout').textContent
-          }  
+            out.textContent = '❌️' + ' ' + out.textContent
+          }
         }
-        
-      })
+      }
+
+      // Wait for Mircopython to be ready
+      // There's probably a better way to do this
+      function onload() {
+        if (typeof mp_js_init == 'function') {
+          document.querySelector('#src').addEventListener('input', execute)
+          execute()
+        } else {
+          setTimeout(onload, 10)
+        }
+      }
+      onload()
     </script>
   </body>
 </html>
