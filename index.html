@@ -35,25 +35,25 @@
         e.target.textContent += e.data
       }, false)
 
-      function execute() {
-        let src = document.querySelector('textarea')
-        let out = document.querySelector('#mp_js_stdout')
-      
+      let src = document.querySelector('textarea')
+      let stdout = mp_js_stdout
+
+      function execute(e) {
         out.textContent = ''
         mp_js_init(64 * 1024)
         mp_js_do_str(src.value)
 
-        out.textContent = out.textContent.replace('Traceback (most recent call last):', '')
-        out.textContent = out.textContent.replace(/.*?line (\d+)/, (_,a) => {
+        stdout.textContent = stdout.textContent.replace('Traceback (most recent call last):', '')
+        stdout.textContent = stdout.textContent.replace(/.*?line (\d+)/, (_,a) => {
           return 'Error on line ' + a + ':'
         })
-        out.textContent = out.textContent.replace(', in <module>','')
+        stdout.textContent = stdout.textContent.replace(', in <module>','')
         
         if (expected) {
           if (expected == out.textContent.trim()) {
-            out.textContent = '✔️' + ' ' + out.textContent
+            stdout.textContent = '✔️' + ' ' + stdout.textContent
           } else {
-            out.textContent = '❌️' + ' ' + out.textContent
+            stdout.textContent = '❌️' + ' ' + stdout.textContent
           }
         }
       }
@@ -62,7 +62,7 @@
       // There's probably a better way to do this
       function onload() {
         if (typeof mp_js_init == 'function') {
-          document.querySelector('#src').addEventListener('input', execute)
+          src.addEventListener('input', execute)
           execute()
         } else {
           setTimeout(onload, 10)
