@@ -2,22 +2,38 @@
 <html>
   <head>
   <meta charset=utf8 />
+  <style>
+  #src {
+      width:100%;
+      height:100%;
+      font-family:monospace;
+      font-size:24px;
+      line-height:48px;
+  }
+  </style>
   </head>
   <body>
     <div id='mp_js_stdout'></div>
-    <textarea id=src></textarea>
+    <div id=src class=language-python>print("hello, world")</div>
     <script src="micropython/micropython.js"></script>
+    <script src="codejar/codejar.js"></script>
+    <link href="prism/prism.css" rel="stylesheet" />
+    <script src="prism/prism.js"></script>
     <script>
+      let jar = CodeJar(document.querySelector('#src'), Prism.highlightElement, {
+        tab:'    ',
+      })
+
       mp_js_stdout.addEventListener('print', function(e) {
         e.target.textContent += e.data
       }, false)
 
-      document.querySelector('#src').addEventListener('input', e => {
+      jar.onUpdate(e => {
         document.querySelector('#mp_js_stdout').textContent = ''
 
         mp_js_init(64 * 1024)
 
-        mp_js_do_str(e.target.value)
+        mp_js_do_str(jar.toString())
       })
     </script>
   </body>
