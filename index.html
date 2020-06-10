@@ -58,6 +58,13 @@
         }
       }
 
+      src.addEventListener('keydown', e => {
+        if (e.key == 'Tab') {
+          e.preventDefault()
+          src.setRangeText('    ', src.selectionStart, src.selectionEnd, 'end')
+        }
+      })
+
       // Wait for Mircopython to be ready
       // There's probably a better way to do this
       function onload() {
