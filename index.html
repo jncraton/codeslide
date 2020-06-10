@@ -56,6 +56,8 @@
             stdout.textContent = '❌️' + ' ' + stdout.textContent
           }
         }
+
+        location.hash = '#' + encodeURIComponent(src.value)
       }
 
       src.addEventListener('keydown', e => {
