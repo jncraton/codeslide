@@ -29,7 +29,7 @@
     <div id=mp_js_stdout></div>
     <script src="micropython/micropython.js"></script>
     <script>
-      expected = "[0, 1, 2, 3, 4]"
+      let expected = "[0, 1, 2, 3, 4]"
     
       mp_js_stdout.addEventListener('print', function(e) {
         e.target.textContent += e.data
@@ -50,7 +50,7 @@
         stdout.textContent = stdout.textContent.replace(', in <module>','')
         
         if (expected) {
-          if (expected == out.textContent.trim()) {
+          if (expected == stdout.textContent.trim()) {
             stdout.textContent = '✔️' + ' ' + stdout.textContent
           } else {
             stdout.textContent = '❌️' + ' ' + stdout.textContent
