@@ -32,9 +32,9 @@ for
 for structure
 ------------
 
-```
-for {variable name} in {iterable}:
-  {loop body executed for each item in iterable}
+```python
+for variable in iterable:
+    # loop body executed for each item in iterable
 ```
 
 for structure details
