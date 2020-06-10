@@ -18,8 +18,8 @@ Modify this program so that it counts to 3:
 
 <iframe width=600 height=400 src="../index.html#WyJwcmludCgwKVxucHJpbnQoMSlcbnByaW50KDIpIiwiMCAxIDIgMyJd"></iframe>
 
-Repition
-========
+Repetition
+==========
 
 ---
 
@@ -30,7 +30,7 @@ for
 
 `for` loops provide a way to iterate over a series of items (formally an *Iterable* in Python)
 
-for stucture
+for structure
 ------------
 
 ```
@@ -38,7 +38,7 @@ for {variable name} in {iterable}:
   {loop body executed for each item in iterable}
 ```
 
-for stucture details
+for structure details
 --------------------
 
 - The variable name will be bound for use in the loop body and will reference the item currently being iterated over.
