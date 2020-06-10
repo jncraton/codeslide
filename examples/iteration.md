@@ -1,5 +1,4 @@
-Iteration in Python
-===================
+% Iteration in Python
 
 Sequential Programs
 ===================
