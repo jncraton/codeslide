@@ -18,7 +18,7 @@
       border:none;
       resize:none;
   }
-  #mp_js_stdout {
+  #output {
     width:100%;
     height:25%;
   }
@@ -26,34 +26,36 @@
   </head>
   <body>
     <textarea id=src class=language-python></textarea>
-    <div id=mp_js_stdout></div>
+    <div id=output>
+      <div>Output: <span id=mp_js_stdout></span></div>
+      <div>Target: <span id=target contenteditable=true>[0, 1, 2, 3, 4]</span></div>
+    </div>
     <script src="micropython/micropython.js"></script>
     <script>
-      let expected = "[0, 1, 2, 3, 4]"
-    
       mp_js_stdout.addEventListener('print', function(e) {
         e.target.textContent += e.data
       }, false)
 
       let src = document.querySelector('textarea')
       let stdout = mp_js_stdout
+      let target = document.querySelector('#target')
 
       function execute(e) {
         stdout.textContent = ''
         mp_js_init(64 * 1024)
         mp_js_do_str(src.value)
 
-        stdout.textContent = stdout.textContent.replace('Traceback (most recent call last):', '')
-        stdout.textContent = stdout.textContent.replace(/.*?line (\d+)/, (_,a) => {
-          return 'Error on line ' + a + ':'
-        })
-        stdout.textContent = stdout.textContent.replace(', in <module>','')
-        
-        if (expected) {
-          if (expected == stdout.textContent.trim()) {
-            stdout.textContent = '✔️' + ' ' + stdout.textContent
+        if (stdout.textContent.startsWith('Traceback')) {
+          stdout.textContent = stdout.textContent.replace(/Traceback[\s\S]*?line (\d+).*\r\n(.*)/gm, (_,a,b) => {
+            return b + ' (line ' + a + ')'
+          })
+          
+          stdout.textContent = stdout.textContent.replace(', in <module>','')
+        } else {
+          if (target.textContent == stdout.textContent.trim()) {
+            stdout.textContent += '✔️'
           } else {
-            stdout.textContent = '❌️' + ' ' + stdout.textContent
+            stdout.textContent += '❌️'
           }
         }
 
@@ -72,6 +74,7 @@
       function onload() {
         if (typeof mp_js_init == 'function') {
           src.addEventListener('input', execute)
+          target.addEventListener('input', execute)
           execute()
         } else {
           setTimeout(onload, 10)
