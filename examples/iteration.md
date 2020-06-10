@@ -1,5 +1,5 @@
-Iteration
-=========
+Iteration in Python
+===================
 
 Sequential Programs
 ===================
