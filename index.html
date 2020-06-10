@@ -65,7 +65,7 @@
           }
         }
 
-        location.hash = '#' + encodeURIComponent(JSON.stringify([src.value,target.value]))
+        location.hash = '#' + btoa(JSON.stringify([src.value,target.value]))
       }
 
       src.addEventListener('keydown', e => {
@@ -80,7 +80,7 @@
       function onload() {
         if (typeof mp_js_init == 'function') {
           if (location.hash.length > 1) {
-            [src.value,target.value] = JSON.parse(decodeURIComponent(location.hash.substring(1)))
+            [src.value,target.value] = JSON.parse(atob(location.hash.substring(1)))
           }
           
           src.addEventListener('input', execute)
