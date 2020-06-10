@@ -59,7 +59,7 @@
           }
         }
 
-        location.hash = '#' + encodeURIComponent(src.value)
+        location.hash = '#' + encodeURIComponent([src.value,target.textContent])
       }
 
       src.addEventListener('keydown', e => {
