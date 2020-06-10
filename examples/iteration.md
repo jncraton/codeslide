@@ -52,8 +52,7 @@ Alter this program to count from 0 to 5
 range
 -----
 
-- `range` is a generate items to iterate over in Python
-- It generates items one at a time for us to iterate over
+- `range` generates items to iterate over in Python
 - We can change it's behavior in various ways
 
 Simple range
