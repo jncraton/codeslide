@@ -25,7 +25,9 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup Pages
         uses: actions/configure-pages@v3
-      - name: Build 
+      - name: Install dependencies
+        run: sudo apt install pandoc texlive-latex-base texlive-fonts-recommended texlive-latex-extra ghostscript
+      - name: Build
         run: make
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
