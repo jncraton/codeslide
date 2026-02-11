@@ -18,11 +18,13 @@ onmessage = async (e) => {
     try {
       let result = await pyodide.runPythonAsync(e.data.code)
       if (result !== undefined && result !== null) {
-        let text = result.toString()
+        let text = String(result)
         if (text !== 'None') {
           postMessage({ type: 'stdout', text, id: e.data.id })
         }
-        if (result.destroy) result.destroy()
+        if (typeof result === 'object' && typeof result.destroy === 'function') {
+          result.destroy()
+        }
       }
       postMessage({ type: 'done', id: e.data.id })
     } catch (error) {
