@@ -57,3 +57,11 @@ def test_traceback(page_root: Page):
         "ZeroDivisionError", timeout=10000
     )
     expect(page_root.locator("#stdout")).to_contain_text("(line 1)", timeout=10000)
+
+
+def test_infinite_loop_timeout(page_root: Page):
+    page_root.fill("#src", "while True: pass")
+
+    expect(page_root.locator("#stdout")).to_have_text(
+        "Timeout: Execution exceeded 100ms", timeout=10000
+    )

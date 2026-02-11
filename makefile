@@ -9,11 +9,11 @@ pyodide:
 	wget https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide-lock.json -O pyodide/pyodide-lock.json
 
 lint:
-	npx prettier@3.6.2 --check index.html
+	npx prettier@3.6.2 --check index.html python.js
 	uv run --with black black --check .
 
 format:
-	npx prettier@3.6.2 --write index.html
+	npx prettier@3.6.2 --write index.html python.js
 	uv run --with black black .
 
 test:
