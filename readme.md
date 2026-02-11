@@ -1,5 +1,4 @@
-Codeslide
-=========
+# Codeslide
 
 Interactive code slides for educational presentations.
 
