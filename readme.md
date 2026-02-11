@@ -32,6 +32,8 @@ The included `codeslide.lua` filter can be used to automatically embed interacti
 
 ### Example
 
+[Pandoc filter example](https://jncraton.github.io/codeslide/examples/filter.html)
+
 Create a file named `presentation.md`:
 
 ~~~markdown
