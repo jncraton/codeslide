@@ -52,7 +52,7 @@
         function (e) {
           e.target.textContent += e.data
         },
-        false
+        false,
       )
 
       let src = document.querySelector('textarea')
@@ -65,18 +65,13 @@
         mp_js_do_str(src.value)
 
         if (stdout.textContent.startsWith('Traceback')) {
-          stdout.textContent = stdout.textContent.replace(
-            /Traceback[\s\S]*?line (\d+).*\r\n(.*)/gm,
-            (_, a, b) => {
-              return b + ' (line ' + a + ')'
-            }
-          )
+          stdout.textContent = stdout.textContent.replace(/Traceback[\s\S]*?line (\d+).*\r\n(.*)/gm, (_, a, b) => {
+            return b + ' (line ' + a + ')'
+          })
 
           stdout.textContent = stdout.textContent.replace(', in <module>', '')
         } else {
-          if (
-            target.value == stdout.textContent.trim().replace(/[\r\n]+/g, ' ')
-          ) {
+          if (target.value == stdout.textContent.trim().replace(/[\r\n]+/g, ' ')) {
             stdout.textContent += '✔️'
           } else {
             stdout.textContent += '❌️'
@@ -98,9 +93,7 @@
       function onload() {
         if (typeof mp_js_init == 'function') {
           if (location.hash.length > 1) {
-            ;[src.value, target.value] = JSON.parse(
-              atob(location.hash.substring(1))
-            )
+            ;[src.value, target.value] = JSON.parse(atob(location.hash.substring(1)))
           }
 
           src.addEventListener('input', execute)
