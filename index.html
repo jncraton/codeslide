@@ -116,8 +116,8 @@
             if (e.data.type === 'error' && !stdout.textContent) {
               stdout.textContent = e.data.message
             }
-            if (stdout.textContent && !stdout.textContent.endsWith('⏎')) {
-              stdout.textContent += '⏎'
+            if (stdout.textContent.endsWith('⏎')) {
+              stdout.textContent = stdout.textContent.slice(0, -1)
             }
             finish()
           }
