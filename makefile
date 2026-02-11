@@ -25,11 +25,8 @@ test: pyodide
 	 kill $$PID || true; \
 	 exit $$STATUS)
 
-examples/filter.html: examples/filter.md codeslide.lua
-	pandoc $< --lua-filter codeslide.lua -s -o $@
-
-examples/%.html: examples/%.md examples/revealjs
-	pandoc --mathjax -t revealjs -s -o $@ $< -V revealjs-url=revealjs -V theme=white
+examples/%.html: examples/%.md examples/revealjs codeslide.lua
+	pandoc --lua-filter codeslide.lua --mathjax -t revealjs -s -o $@ $< -V revealjs-url=revealjs -V theme=white
 
 examples/revealjs:
 	wget https://github.com/hakimel/reveal.js/archive/3.8.0.zip -O reveal.zip
