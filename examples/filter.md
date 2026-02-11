@@ -26,6 +26,14 @@ You can specify a `target` attribute to provide a goal for the user. Codeslide w
 print(21 * 2)
 ```
 
+## JavaScript Support
+
+The filter also supports JavaScript code blocks.
+
+```javascript {target="4"}
+console.log(2 + 2)
+```
+
 ## Multi-line Code
 
 The filter correctly handles multi-line code blocks and encodes them for the URL.

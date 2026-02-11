@@ -52,9 +52,10 @@
       let worker
       let timeout
       let executionId = 0
+      let language = 'python'
 
       function execute() {
-        if (!worker || !window.pyodideReady) return
+        if (!worker || (language === 'python' && !window.pyodideReady)) return
 
         const id = ++executionId
         stdout.textContent = ''
@@ -78,6 +79,12 @@
           const match = [...text.matchAll(/File "<exec>", line (\d+)/g)].pop()
           const line = match ? match[1] : ''
           stdout.textContent = (line ? 'line ' + line + ', ' : '') + error
+        } else if (language === 'js' && stdout.textContent.includes('at eval')) {
+          const lines = stdout.textContent.split('⏎').map((l) => l.trim()).filter(Boolean)
+          const error = lines[0]
+          const match = stdout.textContent.match(/eval:(\d+):(\d+)/)
+          const line = match ? match[1] : ''
+          stdout.textContent = (line ? 'line ' + line + ', ' : '') + error
         } else if (target.parentElement.style.display !== 'none' && target.value) {
           const canonical = (s) => s.replace(/[ \t\r\n⏎]+/g, ' ').trim()
           if (canonical(target.value) == canonical(stdout.textContent)) {
@@ -92,6 +99,9 @@
         if (target.value) {
           params.set('t', target.value)
         }
+        if (language !== 'python') {
+          params.set('l', language)
+        }
         location.hash = '#' + params.toString()
       }
 
@@ -103,8 +113,9 @@
       })
 
       function initWorker() {
+        if (worker) worker.terminate()
         window.pyodideReady = false
-        worker = new Worker('python.js')
+        worker = new Worker(language === 'js' ? 'js.js' : 'python.js')
         worker.onmessage = (e) => {
           if (e.data.type === 'ready') {
             window.pyodideReady = true
@@ -125,19 +136,28 @@
             finish()
           }
         }
+        if (language === 'js') {
+          window.pyodideReady = true
+          execute()
+        }
       }
 
       if (location.hash.length > 1) {
         const hash = location.hash.substring(1)
-        if (hash.startsWith('c=') || hash.includes('&t=')) {
+        if (hash.startsWith('c=') || hash.includes('&t=') || hash.includes('l=')) {
           const params = new URLSearchParams(hash)
           src.value = params.get('c') || ''
           target.value = (params.get('t') || '').replace(/\r?\n/g, '⏎')
+          language = params.get('l') || 'python'
+          if (language === 'javascript') {
+            language = 'js'
+          }
         } else {
           try {
             const data = JSON.parse(atob(hash))
             src.value = data[0] || ''
             target.value = (data[1] || '').replace(/\r?\n/g, '⏎')
+            language = 'python'
           } catch (e) {
             console.error('Failed to parse hash', e)
           }
