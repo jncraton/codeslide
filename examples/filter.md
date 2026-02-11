@@ -34,10 +34,12 @@ The filter also supports JavaScript code blocks.
 console.log(2 + 2)
 ```
 
+---
+
 ```js
 const greeting = "Hello"
 const target = "World"
-`${greeting}, ${target}!`
+greeting
 ```
 
 ## Multi-line Code
