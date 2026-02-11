@@ -22,7 +22,7 @@ print("Hello from Codeslide!")
 You can specify a `target` attribute to provide a goal for the user. Codeslide will check if the output matches this target.
 
 ```python {target="42"}
-# Calculate the answer to life, the universe, and everything
+# Calculate the answer to life
 print(21 * 2)
 ```
 
