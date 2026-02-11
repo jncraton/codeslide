@@ -1,5 +1,9 @@
 # Codeslide
 
+[![Test](https://github.com/jncraton/codeslide/actions/workflows/test.yml/badge.svg)](https://github.com/jncraton/codeslide/actions/workflows/test.yml)
+[![Lint](https://github.com/jncraton/codeslide/actions/workflows/lint.yml/badge.svg)](https://github.com/jncraton/codeslide/actions/workflows/lint.yml)
+[![Pages](https://github.com/jncraton/codeslide/actions/workflows/pages.yml/badge.svg)](https://github.com/jncraton/codeslide/actions/workflows/pages.yml)
+
 Interactive code slides for educational presentations.
 
 ![Demo](examples/for.gif)
@@ -11,3 +15,13 @@ Codeslide provides a way to create a live coding excercise quickly and easily on
 [Live slide creation](https://jncraton.github.io/codeslide/#WyJ7RWRpdGFibGUgY29kZX0iLCJ7RWRpdGFibGUgdGFyZ2V0fSJd)
 
 Note that this software is alpha quality and URLs may break and APIs may change at any time. If you intend to use this software, it is recommended that you run it locally.
+
+## Development
+
+Use the included makefile to format, lint, and test the project:
+
+```bash
+make format
+make lint
+make test
+```
