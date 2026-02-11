@@ -16,13 +16,13 @@ format:
 	npx prettier@3.6.2 --write index.html python.js
 	uv run --with black black .
 
-test:
-	uv run --with pytest-playwright==0.7.2 python -m playwright install chromium; \
+test: pyodide
+	uv run --with pytest-playwright==0.7.2 python -m playwright install chromium
 	(python3 -m http.server 8000 & PID=$$!; \
 	 sleep 2; \
 	 uv run --with pytest-playwright==0.7.2 python -m pytest --browser chromium --base-url http://localhost:8000; \
 	 STATUS=$$?; \
-	 kill $$PID; \
+	 kill $$PID || true; \
 	 exit $$STATUS)
 
 examples/%.html: examples/%.md examples/revealjs
