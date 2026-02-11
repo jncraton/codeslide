@@ -71,10 +71,13 @@
       }
 
       function finish() {
-        if (stdout.textContent.includes('line')) {
-          stdout.textContent = stdout.textContent.replace(/File "<exec>", line (\d+)[^⏎]*⏎([^⏎]*)/g, (_, a, b) => {
-            return b + ' (line ' + a + ')'
-          })
+        if (stdout.textContent.includes('Traceback')) {
+          const text = stdout.textContent.replace(/\r?\n/g, '⏎')
+          const lines = text.split('⏎').map((l) => l.trim()).filter((l) => l && !l.startsWith('^') && !l.includes('Traceback'))
+          const error = lines[lines.length - 1]
+          const match = [...text.matchAll(/File "<exec>", line (\d+)/g)].pop()
+          const line = match ? match[1] : ''
+          stdout.textContent = (line ? 'line ' + line + ', ' : '') + error
         } else if (target.parentElement.style.display !== 'none' && target.value) {
           const canonical = (s) => s.replace(/[ \t\r\n⏎]+/g, ' ').trim()
           if (canonical(target.value) == canonical(stdout.textContent)) {
@@ -114,7 +117,7 @@
           if (e.data.type === 'done' || e.data.type === 'error') {
             clearTimeout(timeout)
             if (e.data.type === 'error' && !stdout.textContent) {
-              stdout.textContent = e.data.message
+              stdout.textContent = e.data.message.replace(/\r?\n/g, '⏎')
             }
             if (stdout.textContent.endsWith('⏎')) {
               stdout.textContent = stdout.textContent.slice(0, -1)

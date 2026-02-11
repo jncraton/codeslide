@@ -69,11 +69,10 @@ def test_expression_output(page_root: Page):
 def test_traceback(page_root: Page):
     page_root.fill("#src", "1/0")
 
-    # ZeroDivisionError: division by zero (line 1)
-    expect(page_root.locator("#stdout")).to_contain_text(
-        "ZeroDivisionError", timeout=10000
+    # line 1, ZeroDivisionError: division by zero
+    expect(page_root.locator("#stdout")).to_have_text(
+        re.compile(r"line 1, ZeroDivisionError: division by zero"), timeout=10000
     )
-    expect(page_root.locator("#stdout")).to_contain_text("(line 1)", timeout=10000)
 
 
 def test_infinite_loop_timeout(page_root: Page):
