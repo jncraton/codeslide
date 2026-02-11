@@ -66,6 +66,20 @@ def test_expression_output(page_root: Page):
     expect(page_root.locator("#stdout")).to_have_text(re.compile(r"4"), timeout=10000)
 
 
+def test_js_execution(page: Page, base_url: str):
+    url = base_url if base_url else file_url
+    page.goto(f"{url}#c=console.log('hi')&l=js")
+
+    expect(page.locator("#stdout")).to_have_text(re.compile(r"hi"), timeout=10000)
+
+
+def test_js_expression_output(page: Page, base_url: str):
+    url = base_url if base_url else file_url
+    page.goto(f"{url}#c=2%2B2&l=js")
+
+    expect(page.locator("#stdout")).to_have_text(re.compile(r"4"), timeout=10000)
+
+
 def test_traceback(page_root: Page):
     page_root.fill("#src", "1/0")
 
