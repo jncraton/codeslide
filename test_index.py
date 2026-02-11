@@ -60,6 +60,12 @@ def test_load_from_new_hash(page: Page, base_url: str):
     expect(page.locator("#stdout")).to_have_text(re.compile(r"hi\s*✔️"), timeout=10000)
 
 
+def test_expression_output(page_root: Page):
+    page_root.fill("#src", "2 + 2")
+
+    expect(page_root.locator("#stdout")).to_have_text(re.compile(r"4"), timeout=10000)
+
+
 def test_traceback(page_root: Page):
     page_root.fill("#src", "1/0")
 
