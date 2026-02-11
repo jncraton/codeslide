@@ -25,3 +25,29 @@ make format
 make lint
 make test
 ```
+
+## Pandoc Filter
+
+The included `codeslide.lua` filter can be used to automatically embed interactive slides in your documents. It replaces Python code blocks with an iframe pointing to the hosted Codeslide.
+
+### Example
+
+Create a file named `presentation.md`:
+
+~~~markdown
+# My Presentation
+
+```python
+print("Hello, World!")
+```
+
+```python {target="4"}
+print(2 + 2)
+```
+~~~
+
+Convert it to HTML using pandoc:
+
+```bash
+pandoc presentation.md --lua-filter codeslide.lua -o presentation.html
+```
