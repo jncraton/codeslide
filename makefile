@@ -36,4 +36,4 @@ examples/revealjs:
 
 clean:
 	rm -f examples/*.html
-	rm -rf examples/revealjs .pytest_cache __pycache__ .browsers .venv pyodide .uv_cache
+	rm -rf examples/revealjs .pytest_cache __pycache__ .browsers .venv pyodide .uv_cache prism codejar
