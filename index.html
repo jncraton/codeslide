@@ -43,33 +43,31 @@
     <textarea id="src" class="language-python"></textarea>
     <div id="output">
       <div>Target: <input id="target" /></div>
-      <div>Output: <span id="mp_js_stdout"></span></div>
+      <div>Output: <span id="stdout"></span></div>
     </div>
-    <script src="micropython/micropython.js"></script>
+    <script src="pyodide/pyodide.js"></script>
     <script>
-      mp_js_stdout.addEventListener(
-        'print',
-        function (e) {
-          e.target.textContent += e.data
-        },
-        false,
-      )
-
       let src = document.querySelector('textarea')
-      let stdout = mp_js_stdout
+      let stdout = document.querySelector('#stdout')
       let target = document.querySelector('#target')
+      let pyodide
 
-      function execute(e) {
+      async function execute() {
+        if (!pyodide) return
+
         stdout.textContent = ''
-        mp_js_init(64 * 1024)
-        mp_js_do_str(src.value)
+        try {
+          await pyodide.runPythonAsync(src.value)
+        } catch (e) {
+          if (!stdout.textContent) {
+            stdout.textContent = e.message
+          }
+        }
 
-        if (stdout.textContent.startsWith('Traceback')) {
-          stdout.textContent = stdout.textContent.replace(/Traceback[\s\S]*?line (\d+).*\r\n(.*)/gm, (_, a, b) => {
+        if (stdout.textContent.includes('line')) {
+          stdout.textContent = stdout.textContent.replace(/File "<exec>", line (\d+).*\n(.*)/g, (_, a, b) => {
             return b + ' (line ' + a + ')'
           })
-
-          stdout.textContent = stdout.textContent.replace(', in <module>', '')
         } else {
           if (target.value == stdout.textContent.trim().replace(/[\r\n]+/g, ' ')) {
             stdout.textContent += '✔️'
@@ -88,22 +86,28 @@
         }
       })
 
-      // Wait for Mircopython to be ready
-      // There's probably a better way to do this
-      function onload() {
-        if (typeof mp_js_init == 'function') {
-          if (location.hash.length > 1) {
-            ;[src.value, target.value] = JSON.parse(atob(location.hash.substring(1)))
-          }
+      async function init() {
+        pyodide = await loadPyodide({
+          indexURL: 'pyodide/',
+          stdout: (text) => {
+            stdout.textContent += text
+          },
+          stderr: (text) => {
+            stdout.textContent += text
+          },
+        })
 
-          src.addEventListener('input', execute)
-          target.addEventListener('input', execute)
-          execute()
-        } else {
-          setTimeout(onload, 10)
+        if (location.hash.length > 1) {
+          ;[src.value, target.value] = JSON.parse(atob(location.hash.substring(1)))
         }
+
+        src.addEventListener('input', execute)
+        target.addEventListener('input', execute)
+        await execute()
+        window.pyodideReady = true
       }
-      onload()
+
+      init()
     </script>
   </body>
 </html>

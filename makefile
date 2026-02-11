@@ -1,4 +1,12 @@
-all: examples/iteration.html
+all: pyodide examples/iteration.html
+
+pyodide:
+	mkdir -p pyodide
+	wget https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js -O pyodide/pyodide.js
+	wget https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.asm.js -O pyodide/pyodide.asm.js
+	wget https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.asm.wasm -O pyodide/pyodide.asm.wasm
+	wget https://cdn.jsdelivr.net/pyodide/v0.27.2/full/python_stdlib.zip -O pyodide/python_stdlib.zip
+	wget https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide-lock.json -O pyodide/pyodide-lock.json
 
 lint:
 	npx prettier@3.6.2 --check index.html
@@ -28,4 +36,4 @@ examples/revealjs:
 
 clean:
 	rm -f examples/*.html
-	rm -rf examples/revealjs .pytest_cache __pycache__ .browsers .venv
+	rm -rf examples/revealjs .pytest_cache __pycache__ .browsers .venv pyodide
