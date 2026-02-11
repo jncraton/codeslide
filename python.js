@@ -6,8 +6,12 @@ let currentId
 async function init() {
   pyodide = await loadPyodide({
     indexURL: 'pyodide/',
-    stdout: (text) => postMessage({ type: 'stdout', text, id: currentId }),
-    stderr: (text) => postMessage({ type: 'stdout', text, id: currentId }),
+  })
+  pyodide.setStdout({
+    batched: (text) => postMessage({ type: 'stdout', text: text + '\n', id: currentId }),
+  })
+  pyodide.setStderr({
+    batched: (text) => postMessage({ type: 'stdout', text: text + '\n', id: currentId }),
   })
   postMessage({ type: 'ready' })
 }
@@ -20,7 +24,7 @@ onmessage = async (e) => {
       if (result !== undefined && result !== null) {
         let text = String(result)
         if (text !== 'None') {
-          postMessage({ type: 'stdout', text, id: e.data.id })
+          postMessage({ type: 'stdout', text: text + '\n', id: e.data.id })
         }
         if (typeof result === 'object' && typeof result.destroy === 'function') {
           result.destroy()

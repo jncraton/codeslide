@@ -72,11 +72,12 @@
 
       function finish() {
         if (stdout.textContent.includes('line')) {
-          stdout.textContent = stdout.textContent.replace(/File "<exec>", line (\d+).*\n(.*)/g, (_, a, b) => {
+          stdout.textContent = stdout.textContent.replace(/File "<exec>", line (\d+)[^⏎]*⏎([^⏎]*)/g, (_, a, b) => {
             return b + ' (line ' + a + ')'
           })
         } else if (target.parentElement.style.display !== 'none' && target.value) {
-          if (target.value == stdout.textContent.trim().replace(/[\r\n]+/g, ' ')) {
+          const canonical = (s) => s.replace(/[ \t\r\n⏎]+/g, ' ').trim()
+          if (canonical(target.value) == canonical(stdout.textContent)) {
             stdout.textContent += '✔️'
           } else {
             stdout.textContent += '❌️'
@@ -108,12 +109,15 @@
           }
           if (e.data.id !== executionId && e.data.type !== 'ready') return
           if (e.data.type === 'stdout') {
-            stdout.textContent += e.data.text
+            stdout.textContent += e.data.text.replace(/\r?\n/g, '⏎')
           }
           if (e.data.type === 'done' || e.data.type === 'error') {
             clearTimeout(timeout)
             if (e.data.type === 'error' && !stdout.textContent) {
               stdout.textContent = e.data.message
+            }
+            if (stdout.textContent && !stdout.textContent.endsWith('⏎')) {
+              stdout.textContent += '⏎'
             }
             finish()
           }
@@ -125,10 +129,12 @@
         if (hash.startsWith('c=') || hash.includes('&t=')) {
           const params = new URLSearchParams(hash)
           src.value = params.get('c') || ''
-          target.value = params.get('t') || ''
+          target.value = (params.get('t') || '').replace(/\r?\n/g, '⏎')
         } else {
           try {
-            ;[src.value, target.value] = JSON.parse(atob(hash))
+            const data = JSON.parse(atob(hash))
+            src.value = data[0] || ''
+            target.value = (data[1] || '').replace(/\r?\n/g, '⏎')
           } catch (e) {
             console.error('Failed to parse hash', e)
           }
