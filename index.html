@@ -74,13 +74,19 @@
       function finish() {
         if (stdout.textContent.includes('Traceback')) {
           const text = stdout.textContent.replace(/\r?\n/g, '⏎')
-          const lines = text.split('⏎').map((l) => l.trim()).filter((l) => l && !l.startsWith('^') && !l.includes('Traceback'))
+          const lines = text
+            .split('⏎')
+            .map((l) => l.trim())
+            .filter((l) => l && !l.startsWith('^') && !l.includes('Traceback'))
           const error = lines[lines.length - 1]
           const match = [...text.matchAll(/File "<exec>", line (\d+)/g)].pop()
           const line = match ? match[1] : ''
           stdout.textContent = (line ? 'line ' + line + ', ' : '') + error
         } else if (language === 'js' && stdout.textContent.includes('at eval')) {
-          const lines = stdout.textContent.split('⏎').map((l) => l.trim()).filter(Boolean)
+          const lines = stdout.textContent
+            .split('⏎')
+            .map((l) => l.trim())
+            .filter(Boolean)
           const error = lines[0]
           const match = stdout.textContent.match(/eval:(\d+):(\d+)/)
           const line = match ? match[1] : ''
