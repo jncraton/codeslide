@@ -30,7 +30,7 @@ jobs:
       - name: Build
         run: make
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v6
         with:
           path: '.'
       - name: Deploy to GitHub Pages
