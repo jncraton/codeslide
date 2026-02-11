@@ -29,9 +29,9 @@ examples/%.html: examples/%.md examples/revealjs codeslide.lua
 	pandoc --lua-filter codeslide.lua --mathjax -t revealjs -s -o $@ $< -V revealjs-url=revealjs -V theme=white
 
 examples/revealjs:
-	wget https://github.com/hakimel/reveal.js/archive/3.8.0.zip -O reveal.zip
+	wget https://codeload.github.com/hakimel/reveal.js/zip/refs/tags/5.2.1 -O reveal.zip
 	unzip reveal.zip
-	mv reveal.js-3.8.0 examples/revealjs
+	mv reveal.js-5.2.1 examples/revealjs
 	rm reveal.zip
 
 clean:
