@@ -45,25 +45,32 @@
       <div>Target: <input id="target" /></div>
       <div>Output: <span id="stdout"></span></div>
     </div>
-    <script src="pyodide/pyodide.js"></script>
     <script>
       let src = document.querySelector('textarea')
       let stdout = document.querySelector('#stdout')
       let target = document.querySelector('#target')
-      let pyodide
+      let worker
+      let timeout
+      let executionId = 0
 
-      async function execute() {
-        if (!pyodide) return
+      function execute() {
+        if (!worker || !window.pyodideReady) return
 
+        const id = ++executionId
         stdout.textContent = ''
-        try {
-          await pyodide.runPythonAsync(src.value)
-        } catch (e) {
-          if (!stdout.textContent) {
-            stdout.textContent = e.message
-          }
-        }
 
+        if (timeout) clearTimeout(timeout)
+        timeout = setTimeout(() => {
+          if (id !== executionId) return
+          worker.terminate()
+          stdout.textContent = 'Timeout: Execution exceeded 100ms'
+          initWorker()
+        }, 100)
+
+        worker.postMessage({ type: 'execute', code: src.value, id })
+      }
+
+      function finish() {
         if (stdout.textContent.includes('line')) {
           stdout.textContent = stdout.textContent.replace(/File "<exec>", line (\d+).*\n(.*)/g, (_, a, b) => {
             return b + ' (line ' + a + ')'
@@ -86,28 +93,36 @@
         }
       })
 
-      async function init() {
-        pyodide = await loadPyodide({
-          indexURL: 'pyodide/',
-          stdout: (text) => {
-            stdout.textContent += text
-          },
-          stderr: (text) => {
-            stdout.textContent += text
-          },
-        })
-
-        if (location.hash.length > 1) {
-          ;[src.value, target.value] = JSON.parse(atob(location.hash.substring(1)))
+      function initWorker() {
+        window.pyodideReady = false
+        worker = new Worker('python.js')
+        worker.onmessage = (e) => {
+          if (e.data.type === 'ready') {
+            window.pyodideReady = true
+            execute()
+          }
+          if (e.data.id !== executionId && e.data.type !== 'ready') return
+          if (e.data.type === 'stdout') {
+            stdout.textContent += e.data.text
+          }
+          if (e.data.type === 'done' || e.data.type === 'error') {
+            clearTimeout(timeout)
+            if (e.data.type === 'error' && !stdout.textContent) {
+              stdout.textContent = e.data.message
+            }
+            finish()
+          }
         }
-
-        src.addEventListener('input', execute)
-        target.addEventListener('input', execute)
-        await execute()
-        window.pyodideReady = true
       }
 
-      init()
+      if (location.hash.length > 1) {
+        ;[src.value, target.value] = JSON.parse(atob(location.hash.substring(1)))
+      }
+
+      src.addEventListener('input', execute)
+      target.addEventListener('input', execute)
+
+      initWorker()
     </script>
   </body>
 </html>
