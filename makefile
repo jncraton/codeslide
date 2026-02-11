@@ -26,7 +26,7 @@ test: pyodide
 	 exit $$STATUS)
 
 examples/%.html: examples/%.md examples/revealjs codeslide.lua
-	pandoc --lua-filter codeslide.lua --mathjax -t revealjs -s -o $@ $< -V revealjs-url=revealjs -V theme=white
+	pandoc --lua-filter codeslide.lua -t revealjs -s -o $@ $< -V revealjs-url=revealjs -V theme=white
 
 examples/revealjs:
 	wget https://codeload.github.com/hakimel/reveal.js/zip/refs/tags/5.2.1 -O reveal.zip
