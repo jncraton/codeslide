@@ -133,6 +133,10 @@
             console.error('Failed to parse hash', e)
           }
         }
+
+        if (!target.value) {
+          target.parentElement.style.display = 'none'
+        }
       }
 
       src.addEventListener('input', execute)
