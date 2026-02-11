@@ -1,11 +1,11 @@
 all: examples/iteration.html
 
 lint:
-	npx prettier@3.6.2 --check .
+	npx prettier@3.6.2 --check index.html
 	uv run --with black black --check .
 
 format:
-	npx prettier@3.6.2 --write .
+	npx prettier@3.6.2 --write index.html
 	uv run --with black black .
 
 test:
