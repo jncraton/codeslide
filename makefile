@@ -1,5 +1,22 @@
 all: examples/iteration.html
 
+lint:
+	npx prettier@3.6.2 --check .
+	uv run --with black black --check .
+
+format:
+	npx prettier@3.6.2 --write .
+	uv run --with black black .
+
+test:
+	uv run --with pytest-playwright==0.7.2 python -m playwright install chromium; \
+	(python3 -m http.server 8000 & PID=$$!; \
+	 sleep 2; \
+	 uv run --with pytest-playwright==0.7.2 python -m pytest --browser chromium --base-url http://localhost:8000; \
+	 STATUS=$$?; \
+	 kill $$PID; \
+	 exit $$STATUS)
+
 examples/%.html: examples/%.md examples/revealjs
 	pandoc --mathjax -t revealjs -s -o $@ $< -V revealjs-url=revealjs -V theme=white
 
@@ -11,4 +28,4 @@ examples/revealjs:
 
 clean:
 	rm -f examples/*.html
-	rm -rf examples/revealjs
+	rm -rf examples/revealjs .pytest_cache __pycache__ .browsers .venv
