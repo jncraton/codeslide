@@ -75,7 +75,7 @@
           stdout.textContent = stdout.textContent.replace(/File "<exec>", line (\d+).*\n(.*)/g, (_, a, b) => {
             return b + ' (line ' + a + ')'
           })
-        } else {
+        } else if (target.parentElement.style.display !== 'none' && target.value) {
           if (target.value == stdout.textContent.trim().replace(/[\r\n]+/g, ' ')) {
             stdout.textContent += '✔️'
           } else {
