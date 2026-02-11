@@ -1,4 +1,4 @@
-all: pyodide examples/iteration.html
+all: pyodide examples/iteration.html examples/filter.html
 
 pyodide:
 	mkdir -p pyodide
@@ -24,6 +24,9 @@ test: pyodide
 	 STATUS=$$?; \
 	 kill $$PID || true; \
 	 exit $$STATUS)
+
+examples/filter.html: examples/filter.md codeslide.lua
+	pandoc $< --lua-filter codeslide.lua -s -o $@
 
 examples/%.html: examples/%.md examples/revealjs
 	pandoc --mathjax -t revealjs -s -o $@ $< -V revealjs-url=revealjs -V theme=white

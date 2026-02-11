@@ -83,7 +83,12 @@
           }
         }
 
-        location.hash = '#' + btoa(JSON.stringify([src.value, target.value]))
+        const params = new URLSearchParams()
+        params.set('c', src.value)
+        if (target.value) {
+          params.set('t', target.value)
+        }
+        location.hash = '#' + params.toString()
       }
 
       src.addEventListener('keydown', (e) => {
@@ -116,7 +121,18 @@
       }
 
       if (location.hash.length > 1) {
-        ;[src.value, target.value] = JSON.parse(atob(location.hash.substring(1)))
+        const hash = location.hash.substring(1)
+        if (hash.startsWith('c=') || hash.includes('&t=')) {
+          const params = new URLSearchParams(hash)
+          src.value = params.get('c') || ''
+          target.value = params.get('t') || ''
+        } else {
+          try {
+            ;[src.value, target.value] = JSON.parse(atob(hash))
+          } catch (e) {
+            console.error('Failed to parse hash', e)
+          }
+        }
       }
 
       src.addEventListener('input', execute)

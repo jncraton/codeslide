@@ -49,6 +49,17 @@ def test_load_from_hash(page: Page, base_url: str):
     expect(page.locator("#stdout")).to_have_text(re.compile(r"hi\s*✔️"), timeout=10000)
 
 
+def test_load_from_new_hash(page: Page, base_url: str):
+    url = base_url if base_url else file_url
+    page.goto(f"{url}#c=print('hi')&t=hi")
+
+    page.wait_for_function("window.pyodideReady === true", timeout=60000)
+
+    expect(page.locator("#src")).to_have_value("print('hi')")
+    expect(page.locator("#target")).to_have_value("hi")
+    expect(page.locator("#stdout")).to_have_text(re.compile(r"hi\s*✔️"), timeout=10000)
+
+
 def test_traceback(page_root: Page):
     page_root.fill("#src", "1/0")
 
