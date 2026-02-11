@@ -17,10 +17,10 @@ format:
 	uv run --with black black .
 
 test: pyodide
-	uv run --with pytest-playwright==0.7.2 python -m playwright install chromium
+	uv run --with pytest-playwright==0.7.2 python -m playwright install chromium firefox
 	(python3 -m http.server 8000 & PID=$$!; \
 	 sleep 2; \
-	 uv run --with pytest-playwright==0.7.2 python -m pytest --browser chromium --base-url http://localhost:8000; \
+	 uv run --with pytest-playwright==0.7.2 python -m pytest --browser chromium --browser firefox --base-url http://localhost:8000; \
 	 STATUS=$$?; \
 	 kill $$PID || true; \
 	 exit $$STATUS)
