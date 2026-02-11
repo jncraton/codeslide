@@ -5,6 +5,8 @@ codeslide_url: https://jncraton.github.io/codeslide/
 
 # Codeslide Filter Example
 
+---
+
 This document demonstrates how the `codeslide.lua` filter can be used to embed interactive Python slides directly into your Markdown documents.
 
 ## Basic Slide
