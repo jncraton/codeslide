@@ -20,7 +20,8 @@ local function urlencode(str)
 end
 
 function CodeBlock(el)
-  if el.classes:includes('python') or el.classes:includes('javascript') or el.classes:includes('js') then
+  if el.classes:includes('codeslide') and
+      (el.classes:includes('python') or el.classes:includes('javascript') or el.classes:includes('js')) then
     local lang = 'python'
     if el.classes:includes('javascript') or el.classes:includes('js') then
       lang = 'js'
