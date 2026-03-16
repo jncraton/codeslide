@@ -28,7 +28,7 @@ make test
 
 ## Pandoc Filter
 
-The included `codeslide.lua` filter can be used to automatically embed interactive slides in your documents. It replaces Python code blocks with an iframe pointing to the hosted Codeslide.
+The included `codeslide.lua` filter can be used to automatically embed interactive slides in your documents. It replaces any Python or Javascript code block including the `.codeslide` class with an iframe pointing to the hosted Codeslide.
 
 ### Example
 
@@ -39,11 +39,11 @@ Create a file named `presentation.md`:
 ~~~markdown
 # My Presentation
 
-```python
+```python {.codeslide}
 print("Hello, World!")
 ```
 
-```python {target="4"}
+```python {.codeslide target="4"}
 print(2 + 2)
 ```
 ~~~

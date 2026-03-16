@@ -13,7 +13,7 @@ This document demonstrates how the `codeslide.lua` filter can be used to embed i
 
 A simple Python code block will be converted into an interactive slide.
 
-```python
+```python {.codeslide}
 print("Hello from Codeslide!")
 ```
 
@@ -21,7 +21,7 @@ print("Hello from Codeslide!")
 
 You can specify a `target` attribute to provide a goal for the user. Codeslide will check if the output matches this target.
 
-```python {target="42"}
+```python {.codeslide target="42"}
 # Calculate the answer to life
 print(21 * 2)
 ```
@@ -30,7 +30,7 @@ print(21 * 2)
 
 The filter also supports JavaScript code blocks.
 
-```javascript {target="4"}
+```javascript {.codeslide target="4"}
 console.log(2 + 2)
 ```
 
@@ -46,7 +46,7 @@ greeting
 
 The filter correctly handles multi-line code blocks and encodes them for the URL.
 
-```python
+```python {.codeslide}
 for i in range(3):
     print(f"Iteration {i}")
 ```
